@@ -1,0 +1,51 @@
+import csv
+class Student:
+    def __init__(self,name,conf):
+        self.name = name
+        self.lab_max = conf['lab_max']
+        self.lab_num = conf['lab_num']
+        self.lab = [0] * self.lab_num
+   
+    def set_lab(self,score,number = None):
+        self.score = score
+        self.number = number
+        if number == None:
+            if not 0 in self.lab:
+                print('error')
+            else:
+                for i in range(len(self.lab)):
+                    if self.lab[i] == 0:
+                        self.lab[i] = score
+                        break
+        else:
+            if number > len(self.lab):
+                print('error')
+            elif score > self.lab_max:
+                self.lab[number] = self.lab_max
+            else:
+                self.lab[number] = self.score
+    
+    def average(self):
+        return (round(sum(self.lab) / self.lab_num,1))
+ 
+fp = open('students.csv')
+def find_best_student(filename):
+    best = 0
+    csv_r = csv.DictReader(filename)
+    for arg in csv_r:
+        name = arg['name']
+        conf = {'lab_max' : int(arg['lab_max']), 'lab_num' : int(arg['lab_num'])}
+        a11 = int(arg['11'])
+        a12 = int(arg['12'])
+        a13 = int(arg['13'])
+        a14 = int(arg['14'])
+        s = Student(name,conf)
+        s.set_lab(a11)
+        s.set_lab(a12)
+        s.set_lab(a13)
+        s.set_lab(a14)
+        if s.average() > best:
+            best = s.average()
+            name = s.name
+    return name
+print(find_best_student(fp))
